@@ -17,12 +17,19 @@ def debug_lines(oFile, iLineNumber, iNumberOfLines):
 
 
 def read_file(sFilename, lLines, bStrip=True):
-    with open(sFilename) as oFile:
+    def _read(oFile, lLines, bStrip):
         for sLine in oFile:
             if bStrip:
                 lLines.append(sLine.rstrip())
             else:
                 lLines.append(sLine.strip("\n"))
+
+    try:
+        with open(sFilename, encoding="utf-8") as oFile:
+            _read(oFile, lLines, bStrip=bStrip)
+    except UnicodeDecodeError:
+        with open(sFilename, encoding="ISO-8859-1") as oFile:
+            _read(oFile, lLines, bStrip=bStrip)
 
 
 def print_attributes(oLine):
